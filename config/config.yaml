@@ -1,0 +1,29 @@
+# Runtime parameters — loaded by the agent registry and passed as Graph(config=...).
+# Separate from config/agent.yaml, which is the static manifest.
+
+# Retry budget for the backbone's routing decision.
+max_retry: 3
+# Request timeout in seconds, honoured by framework service clients.
+timeout_s: 30
+
+# Report settings. Forwarded to the report workflow by
+# ReportGenerationGraphNode._parent_config() and republished into inner state by
+# DomainWorkflowGraph._extra_initial_state(), where SectionPlanningNode and
+# ReportRenderingNode read them.
+report:
+  # Relative path to a Jinja2 report template, resolved against the repository
+  # root. When no file is present the built-in layout is used, which renders the
+  # same sections — shipping a template is an option, not a prerequisite.
+  report_template_path: "config/admin_report_template.md"
+  # Section templates keyed by report_type. Each entry is an ordered list of
+  # {key, title, required, source_facts}. An empty mapping means every report
+  # type uses the built-in section set (background, findings, recommendations,
+  # next actions). Example:
+  #
+  # section_templates:
+  #   project_status:
+  #     - {key: background,      title: "Project Overview", required: true,  source_facts: [background]}
+  #     - {key: findings,        title: "Progress",         required: true,  source_facts: [findings, metrics]}
+  #     - {key: recommendations, title: "Issues and Actions", required: true, source_facts: [recommendations_source]}
+  #     - {key: next_actions,    title: "Schedule",         required: true,  source_facts: [recommendations_source]}
+  section_templates: {}
